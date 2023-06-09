@@ -2,7 +2,7 @@
 
 ![Kuhn's poker tree](https://raw.githubusercontent.com/Danielhp95/gym-kuhn-poker/master/Kuhn_poker_tree.png)
 
-Kuhn poker implemented in accordance to OpenAI gym interface.
+Kuhn apoker iaamplemented in accordance to OpenAI gym interface.
 
 ## Game description
 
