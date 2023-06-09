@@ -11,7 +11,6 @@ from .one_hot_space import OOneHotEncoding
 class ActionType(enum.Enum):
     PASS = 0
     BET  = 1
-    Fold = 20000000
 
 
 class KuhnPokerEnv(gym.Env):
@@ -21,10 +20,10 @@ class KuhnPokerEnv(gym.Env):
 
     def __init__(self, number_of_players=2, deck_size=3, betting_rounds=2, ante=1):
         '''
-        :param number_of_players: Number of players (Default 2).
-        :param deck_size: Size of the deck from which cards will be drawn, one for each player (Default 3).
-        :param betting_rounds: Number of times that (Default: 2).
-        :param ante: Amount of utility that all players must pay at the beginning of an episode (Default 1).
+        :parameter number_of_players: Number of players (Default 2).
+        :parameter deck_size: Size of the deck from which cards will be drawn, one for each player (Default is 3).
+        :parameter betting_rounds: Number of times that (Default: 2).
+        :parameter ante: Amount of money that all players must pay at the beginning of an episode (Default is 1).
         '''
         assert number_of_players >= 2, "Game must be played with at least 2 players"
         assert deck_size >= number_of_players, "The deck of cards must contain at least one card per player"
@@ -43,7 +42,9 @@ class KuhnPokerEnv(gym.Env):
         single_observation_space = self.calculate_observation_space()
         self.observation_space = Tuple([single_observation_space
                                        for _ in range(self.number_of_players)])
-        self.state_space_size = None # TODO len(self.random_initial_state_vector())
+        self.state_space_size = None 
+        
+        # TODO len(self.random_initial_state_vector())
 
         self.betting_history_index = (self.number_of_players +
                                       self.number_of_players * self.deck_size)
@@ -63,7 +64,8 @@ class KuhnPokerEnv(gym.Env):
     def step(self, action):
         assert 0 <= action <= len(ActionType), \
                f"Action outside of valid range: [0,{len(ActionType)}]"
-        assert not self.done, "Episode is over"
+
+        assert not self.done, "Player " + str(self.get_winner()) + " has won!" + " Episode is over"
         move = ActionType(action)
 
         self.state = self.update_state(self.current_player, move)
@@ -72,6 +74,13 @@ class KuhnPokerEnv(gym.Env):
         else: reward_vector = [0] * self.number_of_players
 
         info = {}
+        acti = "Betted"
+
+        if action == 0: 
+            acti = "Passed" 
+
+        print("Player " + str(self.current_player) + " has " + acti)
+        
         return [self.observation_from_state(i) for i in range(self.number_of_players)], \
                reward_vector, self.done, info
 
