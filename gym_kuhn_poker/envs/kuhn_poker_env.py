@@ -11,6 +11,7 @@ from .one_hot_space import OOneHotEncoding
 class ActionType(enum.Enum):
     PASS = 0
     BET  = 1
+    Fold = 2
 
 
 class KuhnPokerEnv(gym.Env):
